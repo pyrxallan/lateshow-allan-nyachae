@@ -1,7 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
+
 db = SQLAlchemy()
+
 
 
 class Episode(db.Model):
@@ -79,3 +83,4 @@ class Appearance(db.Model):
         if include_episode:
             base['episode'] = self.episode.to_dict(fields=('id','date','number'))
         return base
+ 
