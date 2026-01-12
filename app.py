@@ -82,8 +82,8 @@ def create_app():
         if errors:
             return jsonify({"errors": errors}), 400
 
-        restaurant = Restaurant(name=name, address=address)
         try:
+            restaurant = Restaurant(name=name, address=address)
             db.session.add(restaurant)
             db.session.commit()
         except Exception as e:
@@ -168,8 +168,8 @@ def create_app():
         if not restaurant or not pizza:
             return jsonify({"errors": ["restaurant or pizza not found"]}), 400
 
-        restaurant_pizza = RestaurantPizza(price=price, restaurant=restaurant, pizza=pizza)
         try:
+            restaurant_pizza = RestaurantPizza(price=price, restaurant=restaurant, pizza=pizza)
             db.session.add(restaurant_pizza)
             db.session.commit()
         except Exception as e:
