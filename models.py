@@ -182,5 +182,3 @@ class RestaurantPizza(db.Model):
         if include_pizza:
             base['pizza'] = self.pizza.to_dict()
         return base
- 
- 
