@@ -35,8 +35,8 @@ A Flask-based REST API for managing episodes, guests, and appearances on a late-
 
 1. **Clone the repository** (replace with your actual repo name):
    ```bash
-   git clone https://github.com/yourusername/lateshow-yourname.git
-   cd lateshow-yourname
+   git clone https://github.com/pyrxallan/lateshow-allan-nyachae.git
+   cd lateshow-allan-nyachae
    ```
 
 2. **Create a virtual environment**:
