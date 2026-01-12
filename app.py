@@ -133,8 +133,8 @@ def create_app():
         if errors:
             return jsonify({"errors": errors}), 400
 
-        pizza = Pizza(name=name, ingredients=ingredients)
         try:
+            pizza = Pizza(name=name, ingredients=ingredients)
             db.session.add(pizza)
             db.session.commit()
         except Exception as e:
