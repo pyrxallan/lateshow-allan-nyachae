@@ -23,111 +23,88 @@ Now you can implement the relationships as shown in the ER Diagram:
 
 - An `Episode` has many `Guest`s through `Appearance`
 - A `Guest` has many `Episode`s through `Appearance`
-- An `Appearance` belongs to a `Guest` and belongs to a `Episode`
+Instructions
 
-Since a `Appearance` belongs to a `Episode` and a `Guest`, configure the model to cascade deletes.
+Setup
 
-Set serialization rules to limit the recursion depth.
-Run the migrations and seed the database
-Note that this seed file uses a CSV file Download CSV fileto populate the database. If you aren't able to get the provided seed file working, you are welcome to generate your own seed data to test the application.
+Create a new PRIVATE repository. Ensure your repository has a name in the following format: lateshow-firstname-lastname (example: lateshow-jane-doe).
+
+You have been provided a Postman collection: `challenge-4-lateshow.postman_collection.json`. Import that into Postman (Upload Files) to test endpoints.
+
+Deliverables
+
+Your job is to build out the Flask API to add the functionality described below.
+
+Models & Relationships
+
+- An `Episode` has many `Guest`s through `Appearance`.
+- A `Guest` has many `Episode`s through `Appearance`.
+- An `Appearance` belongs to a `Guest` and belongs to an `Episode`.
+
+Apperances should cascade-delete when their parent `Episode` or `Guest` is removed.
 
 Validations
-Add validations to the `Appearance` model:
 
-- must have a `rating` between 1 and 5 (inclusive - 1 and 5 are okay)
+- `Appearance.rating` must be an integer between 1 and 5 (inclusive).
 
-
-Routes
-
-Set up the following routes. Make sure to return JSON data in the format specified along with the appropriate HTTP verb.
-
-Recall you can specify fields to include or exclude when serializing a model instance to a dictionary using to_dict() (don't forget the comma if specifying a single field).
+Routes Required
 
 a. GET /episodes
-Return JSON data in the format below:
-[
-  {
-    "id": 1,
-    "date": "1/11/99",
-    "number": 1
-  },
-  {
-    "id": 2,
-    "date": "1/12/99",
-    "number": 2
-  }
-]
+
+Return an array of episodes with `id`, `date`, and `number`.
 
 b. GET /episodes/:id
-If the `Episode` exists, return JSON data in the format below:
-{
-  {
-    "id": 1,
-    "date": "1/11/99",
-    "number": 1,
-    "appearances": [
-        {
-            "episode_id": 1,
-            "guest": {
-                "id": 1,
-                "name": "Michael J. Fox",
-                "occupation": "actor"
-            },
-            "guest_id": 1,
-            "id": 1,
-            "rating": 4
-        }
-    ]
-}
-If the `Episode` does not exist, return the following JSON data, along with the appropriate HTTP status code:
-{
-  "error": "Episode not found"
-}
+
+Return the episode with `appearances` array. Each appearance should include `episode_id`, `guest` (with `id`, `name`, `occupation`), `guest_id`, `id`, and `rating`. If the episode is not found, return `{ "error": "Episode not found" }` with a 404 status.
 
 c. GET /guests
-Return JSON data in the format below:
-[
-  {
-    "id": 1,
-    "name": "Michael J. Fox",
-    "occupation": "actor"
-  },
-  {
-    "id": 2,
-    "name": "Sandra Bernhard",
-    "occupation": "Comedian"
-  },
-  {
-    "id": 3,
-    "name": "Tracey Ullman",
-    "occupation": "television actress"
-  }
-]
+
+Return an array of guests with `id`, `name`, and `occupation`.
+
 d. POST /appearances
-This route should create a new `Appearance` that is associated with an existing `Episode` and `Guest`. It should accept an object with the following properties in the body of the request:
-{
-  "rating": 5,
-  "episode_id": 100,
-  "guest_id": 123
-}
-If the `Appearance` is created successfully, send back a response with the following data:
-{
-  "id": 162,
-  "rating": 5,
-  "guest_id": 3,
-  "episode_id": 2,
-  "episode": {
-    "date": "1/12/99",
-    "id": 2,
-    "number": 2
-  },
-  "guest": {
-    "id": 3,
-    "name": "Tracey Ullman",
-    "occupation": "television actress"
-  }
-}
-If the `Appearance` is **not** created successfully, return the following JSON data, along with the appropriate HTTP status code:
-{
- "errors": ["validation errors"]
-}
+
+Create a new `Appearance` tied to an existing `Episode` and `Guest`. Body example:
+
+```json
+{ "rating": 5, "episode_id": 2, "guest_id": 3 }
+```
+
+On success return the created appearance including nested `episode` (id/date/number) and `guest` (id/name/occupation). On failure return `{ "errors": [ ... ] }` with an appropriate status code.
+
+Setup and run (local)
+
+1. Create a Python virtual environment and install dependencies:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Seed the database with sample data:
+
+```bash
+python seed.py
+```
+
+3. Run the app:
+
+```bash
+python app.py
+```
+
+Endpoints
+
+- `GET /episodes` - returns list of episodes (id, date, number)
+- `GET /episodes/:id` - returns an episode with `appearances` (includes nested guest)
+- `GET /guests` - returns list of guests
+- `POST /appearances` - create an appearance; body: `{ "rating": 5, "episode_id": 2, "guest_id": 3 }`
+
+Postman
+
+Import `challenge-4-lateshow.postman_collection.json` into Postman via Upload Files and test endpoints.
+
+Notes
+
+This repository includes a minimal Flask app (`app.py`), models (`models.py`), and a `seed.py` script that populates sample data matching the examples in the assignment.
+```
